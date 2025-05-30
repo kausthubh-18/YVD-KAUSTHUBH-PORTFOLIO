@@ -10,11 +10,17 @@
       --accent-color: #00c8ff;
       --bg-light: #f7f9fc;
       --bg-dark: #ffffff;
+      --focus-outline: 2px dashed #00c8ff;
+      --transition-time: 0.3s;
+    }
+    html {
+      scroll-behavior: smooth;
     }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0; background: var(--bg-light); color: #222;
       min-height: 100vh; display: flex; flex-direction: column;
+      line-height: 1.5;
     }
     nav {
       background: var(--main-color);
@@ -26,6 +32,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     }
     nav .logo {
       font-size: 1.5rem;
@@ -48,12 +55,15 @@
       padding: 6px 10px;
       border-radius: 4px;
       display: block;
-      transition: background-color 0.3s;
+      transition: background-color var(--transition-time);
+      outline-offset: 3px;
     }
     nav ul li a:hover,
-    nav ul li a.active {
+    nav ul li a.active,
+    nav ul li a:focus {
       background-color: var(--accent-color);
       color: #004d99;
+      outline: var(--focus-outline);
     }
     main {
       flex-grow: 1;
@@ -88,6 +98,7 @@
       border-radius: 8px;
       border: none;
       margin-top: 1rem;
+      display: block;
     }
     /* Simple fade-in */
     @keyframes fadeIn {
@@ -99,6 +110,7 @@
       nav {
         flex-direction: column;
         align-items: flex-start;
+        padding: 1rem;
       }
       nav ul {
         flex-direction: column;
@@ -142,7 +154,8 @@
       border: 2px solid var(--main-color);
       border-radius: 6px;
       resize: vertical;
-      transition: border-color 0.3s;
+      transition: border-color var(--transition-time);
+      font-family: inherit;
     }
 
     #contact-form input:focus,
@@ -159,12 +172,15 @@
       border-radius: 6px;
       padding: 0.85rem;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background-color var(--transition-time);
+      font-size: 1rem;
     }
 
-    #contact-form button:hover {
+    #contact-form button:hover,
+    #contact-form button:focus {
       background-color: var(--accent-color);
       color: var(--main-color);
+      outline: var(--focus-outline);
     }
 
     .social-links {
@@ -183,11 +199,13 @@
       width: 36px;
       height: 36px;
       filter: invert(20%) sepia(90%) saturate(250%) hue-rotate(170deg) brightness(95%);
-      transition: filter 0.3s;
+      transition: filter var(--transition-time);
     }
 
-    .social-links a:hover {
+    .social-links a:hover,
+    .social-links a:focus {
       filter: invert(64%) sepia(98%) saturate(450%) hue-rotate(170deg) brightness(90%);
+      outline: var(--focus-outline);
     }
 
     .social-links img {
@@ -195,84 +213,145 @@
       height: 100%;
       object-fit: contain;
     }
+
+    /* Back to Top button */
+    #backToTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: var(--main-color);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 24px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      transition: background-color var(--transition-time);
+      z-index: 200;
+    }
+    #backToTop:hover,
+    #backToTop:focus {
+      background-color: var(--accent-color);
+      color: var(--main-color);
+      outline: var(--focus-outline);
+    }
+
+    /* Validation styles */
+    .error {
+      border-color: #d93025 !important;
+    }
+    .error-message {
+      color: #d93025;
+      font-size: 0.9rem;
+      margin-top: -0.8rem;
+      margin-bottom: 0.8rem;
+      font-style: italic;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
   </style>
 </head>
 <body>
 
-  <nav>
-    <div class="logo">Kausthubh</div>
+  <nav role="navigation" aria-label="Primary Navigation">
+    <div class="logo" tabindex="0">Kausthubh</div>
     <ul id="menu">
-      <li><a href="#" class="active" data-section="home">Home</a></li>
-      <li><a href="#" data-section="projects">Projects</a></li>
-      <li><a href="#" data-section="videos">Videos</a></li>
-      <li><a href="#" data-section="contact">Contact</a></li>
+      <li><a href="#home" class="active" data-section="home" aria-current="page">Home</a></li>
+      <li><a href="#projects" data-section="projects">Projects</a></li>
+      <li><a href="#videos" data-section="videos">Videos</a></li>
+      <li><a href="#contact" data-section="contact">Contact</a></li>
     </ul>
   </nav>
 
   <main>
     <!-- Home Section -->
-    <section id="home" class="active">
+    <section id="home" class="active" tabindex="-1" aria-label="Welcome section">
       <h2 class="section-title">Welcome</h2>
       <p>Hello! I am <strong>YVD Kausthubh</strong>, passionate about VLSI design, embedded systems, and building full-stack IoT and processor solutions.</p>
       <p>This portfolio showcases my projects, demo videos, and how to contact me.</p>
     </section>
 
     <!-- Projects Section -->
-<section id="projects">
-  <h2 class="section-title">Projects</h2>
-  <ul style="max-width: 700px; margin: 0 auto; padding-left: 1.2rem; color: #333; font-size: 1.1rem; line-height: 1.6;">
-    <li><strong>Coretrion: Advanced Processor Core [CAPC]</strong></li>
-    <li><strong>Chipsetron: Advanced IoT Controller [CAIP]</strong></li>
-    <li><strong>Smart Hand-Bag</strong></li>
-    <li><strong>VLSI Based Smart Home-Automation using FPGA Board & Node MCU</strong></li>
-    <li><strong>Smart Rover</strong></li>
-    <li><strong>An Automated greenhouse system designed with Arduino</strong></li>
-    <li><strong>WI-FI car using Node MCU</strong></li>
-    <li><strong>Designed 3-Input AND Gate Using Cadence Virtuoso</strong></li>
-    <li><strong>Smart Irrigation System Using IoT</strong></li>
-    <li><strong>Stopwatch Timer Using Finite State Machine (FSM)</strong></li>
-  </ul>
-</section>
-
+    <section id="projects" tabindex="-1" aria-label="Projects section">
+      <h2 class="section-title">Projects</h2>
+      <ul style="max-width: 700px; margin: 0 auto; padding-left: 1.2rem; color: #333; font-size: 1.1rem; line-height: 1.6;">
+        <li><strong>Coretrion: Advanced Processor Core [CAPC]</strong></li>
+        <li><strong>Chipsetron: Advanced IoT Controller [CAIP]</strong></li>
+        <li><strong>Smart Hand-Bag</strong></li>
+        <li><strong>VLSI Based Smart Home-Automation using FPGA Board & Node MCU</strong></li>
+        <li><strong>Smart Rover</strong></li>
+        <li><strong>An Automated greenhouse system designed with Arduino</strong></li>
+        <li><strong>WI-FI car using Node MCU</strong></li>
+        <li><strong>Designed 3-Input AND Gate Using Cadence Virtuoso</strong></li>
+        <li><strong>Smart Irrigation System Using IoT</strong></li>
+        <li><strong>Stopwatch Timer Using Finite State Machine (FSM)</strong></li>
+      </ul>
+    </section>
 
     <!-- Videos Section -->
-    <section id="videos">
+    <section id="videos" tabindex="-1" aria-label="Demo videos section">
       <h2 class="section-title">Demo Videos</h2>
       <div>
         <h4>CHIPSETRON Architecture Overview</h4>
-        <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allowfullscreen></iframe>
+        <iframe
+          src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+          allowfullscreen
+          loading="lazy"
+          title="CHIPSETRON Architecture Overview"
+          aria-describedby="video-description-1"
+        ></iframe>
+        <p id="video-description-1" class="visually-hidden">Video overview of the CHIPSETRON architecture</p>
       </div>
       <div>
         <h4>Smart Irrigation IoT Demo</h4>
-        <!-- Example Google Drive embed: replace VIDEO_ID with your actual file ID -->
-        <iframe src="https://drive.google.com/file/d/VIDEO_ID/preview" allowfullscreen></iframe>
+        <iframe
+          src="https://drive.google.com/file/d/VIDEO_ID/preview"
+          allowfullscreen
+          loading="lazy"
+          title="Smart Irrigation IoT Demo"
+          aria-describedby="video-description-2"
+        ></iframe>
+        <p id="video-description-2" class="visually-hidden">Demonstration video of Smart Irrigation IoT system</p>
       </div>
     </section>
 
-    <!-- Redesigned Contact Section -->
-    <section id="contact">
+    <!-- Contact Section -->
+    <section id="contact" tabindex="-1" aria-label="Contact section">
       <h2 class="section-title">Get in Touch</h2>
       <p>If you'd like to collaborate or just say hello, feel free to send me a message!</p>
-      <form id="contact-form" action="mailto:ykausthubh@gmail.com" method="POST" enctype="text/plain">
+      <form id="contact-form" action="mailto:ykausthubh@gmail.com" method="POST" enctype="text/plain" novalidate>
         <label for="name">Name</label>
-        <input type="text" id="name" name="Name" placeholder="Your full name" required />
+        <input type="text" id="name" name="Name" placeholder="Your name" required aria-required="true" />
+        <div id="name-error" class="error-message" aria-live="polite"></div>
 
         <label for="email">Email</label>
-        <input type="email" id="email" name="Email" placeholder="Your email address" required />
+        <input type="email" id="email" name="Email" placeholder="Your email" required aria-required="true" />
+        <div id="email-error" class="error-message" aria-live="polite"></div>
 
         <label for="message">Message</label>
-        <textarea id="message" name="Message" rows="5" placeholder="Write your message here..." required></textarea>
+        <textarea id="message" name="Message" rows="4" placeholder="Write your message here..." required aria-required="true"></textarea>
+        <div id="message-error" class="error-message" aria-live="polite"></div>
 
-        <button type="submit">Send Message</button>
+        <button type="submit">Send</button>
       </form>
 
-      <div class="social-links">
-        <p>Or connect with me on:</p>
-        <a href="https://github.com/YVDKausthubh18" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg" alt="GitHub" />
+      <div class="social-links" aria-label="Social media links">
+        <p>Connect with me:</p>
+        <a href="https://www.linkedin.com/in/yvd-kausthubh-769b6a196/" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn icon" />
         </a>
-        <a href="https://www.linkedin.com/in/kausthubh-yerramsetti-434a04176/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-          <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" />
+        <a href="https://github.com/kausthubh-yvd" target="_blank" rel="noopener" aria-label="GitHub">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub icon" />
+        </a>
+        <a href="mailto:ykausthubh@gmail.com" aria-label="Email">
+          <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" alt="Email icon" />
         </a>
       </div>
     </section>
@@ -282,25 +361,99 @@
     &copy; 2025 YVD Kausthubh. All rights reserved.
   </footer>
 
+  <button id="backToTop" aria-label="Back to top" title="Back to top">&uarr;</button>
+
   <script>
-    // Simple SPA navigation for sections
-    const menuLinks = document.querySelectorAll('#menu a');
+    // Navigation smooth scroll & section switching
+    const navLinks = document.querySelectorAll('nav ul li a');
     const sections = document.querySelectorAll('main section');
 
-    menuLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
+    function clearActiveLinks() {
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+      });
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
         e.preventDefault();
-        const target = link.dataset.section;
+        const targetId = link.getAttribute('href').slice(1);
 
-        // Remove active from all links and sections
-        menuLinks.forEach(l => l.classList.remove('active'));
-        sections.forEach(sec => sec.classList.remove('active'));
-
-        // Activate selected link and section
+        // Update active link
+        clearActiveLinks();
         link.classList.add('active');
-        document.getElementById(target).classList.add('active');
+        link.setAttribute('aria-current', 'page');
+
+        // Show only the selected section
+        sections.forEach(section => {
+          if (section.id === targetId) {
+            section.classList.add('active');
+            section.focus();
+          } else {
+            section.classList.remove('active');
+          }
+        });
+
+        // Scroll to top of main content smoothly (in case section is long)
+        document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
       });
     });
+
+    // Back to top button functionality
+    const backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopBtn.style.display = 'flex';
+      } else {
+        backToTopBtn.style.display = 'none';
+      }
+    });
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Basic contact form validation
+    const form = document.getElementById('contact-form');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const messageInput = document.getElementById('message');
+    const nameError = document.getElementById('name-error');
+    const emailError = document.getElementById('email-error');
+    const messageError = document.getElementById('message-error');
+
+    function validateEmail(email) {
+      // Basic email regex
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    form.addEventListener('submit', e => {
+      let valid = true;
+      // Reset errors
+      [nameError, emailError, messageError].forEach(el => (el.textContent = ''));
+      [nameInput, emailInput, messageInput].forEach(input => input.classList.remove('error'));
+
+      if (!nameInput.value.trim()) {
+        nameError.textContent = 'Please enter your name.';
+        nameInput.classList.add('error');
+        valid = false;
+      }
+      if (!emailInput.value.trim() || !validateEmail(emailInput.value.trim())) {
+        emailError.textContent = 'Please enter a valid email address.';
+        emailInput.classList.add('error');
+        valid = false;
+      }
+      if (!messageInput.value.trim()) {
+        messageError.textContent = 'Please enter your message.';
+        messageInput.classList.add('error');
+        valid = false;
+      }
+
+      if (!valid) {
+        e.preventDefault();
+      }
+    });
+
   </script>
 </body>
 </html>

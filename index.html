@@ -125,6 +125,49 @@
       }
     }
 
+    /* Carousel Styles */
+    .carousel {
+      position: relative;
+      max-width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slides {
+      display: flex;
+      width: 300%; /* Adjust based on the number of slides */
+      height: 100%;
+      transition: transform 1s ease-in-out;
+    }
+
+    .slides img {
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+    }
+
+    .dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .dot.active {
+      background: white;
+    }
+
     /* Contact Section Styles */
     #contact p {
       text-align: center;
@@ -271,18 +314,29 @@
   </nav>
 
   <main>
-   <!-- Home Section -->
-<section id="home" class="active" tabindex="-1" aria-label="Welcome section">
-  <h2 class="section-title">Welcome</h2>
-  <p>Hello! I am <strong>YVD Kausthubh</strong>, passionate about VLSI design, embedded systems, and building full-stack IoT and processor solutions.</p>
-  <p>This portfolio showcases my projects, demo videos, and how to contact me.</p>
+    <!-- Home Section -->
+    <section id="home" class="active" tabindex="-1" aria-label="Welcome section">
+      <div class="carousel">
+        <div class="slides">
+          <img src="images/slide1.jpg" alt="Slide 1">
+          <img src="images/slide2.jpg" alt="Slide 2">
+          <img src="images/slide3.jpg" alt="Slide 3">
+        </div>
+        <div class="dots">
+          <span class="dot" onclick="currentSlide(0)"></span>
+          <span class="dot" onclick="currentSlide(1)"></span>
+          <span class="dot" onclick="currentSlide(2)"></span>
+        </div>
+      </div>
+      <h2 class="section-title">Welcome</h2>
+      <p>Hello! I am <strong>YVD Kausthubh</strong>, passionate about VLSI design, embedded systems, and building full-stack IoT and processor solutions.</p>
+      <p>This portfolio showcases my projects, demo videos, and how to contact me.</p>
 
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 2rem;">
-    <img src="images/kausthubh_photo.jpg" alt="YVD Kausthubh Photo" style="max-width: 280px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" />
-    <img src="images/coretrion_block_diagram.png" alt="Coretrion Block Diagram" style="max-width: 400px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" />
-  </div>
-</section>
-
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 2rem;">
+        <img src="images/kausthubh_photo.jpg" alt="YVD Kausthubh Photo" style="max-width: 280px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" />
+        <img src="images/coretrion_block_diagram.png" alt="Coretrion Block Diagram" style="max-width: 400px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" />
+      </div>
+    </section>
 
     <!-- Projects Section -->
     <section id="projects" tabindex="-1" aria-label="Projects section">
@@ -427,126 +481,71 @@
     const nameError = document.getElementById('name-error');
     const emailError = document.getElementById('email-error');
     const messageError = document.getElementById('message-error');
+        function validateForm() {
+      let isValid = true;
+      nameError.textContent = '';
+      emailError.textContent = '';
+      messageError.textContent = '';
 
-    function validateEmail(email) {
-      // Basic email regex
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      // Name validation
+      if (nameInput.value.trim() === '') {
+        nameError.textContent = 'Name is required.';
+        nameInput.classList.add('error');
+        isValid = false;
+      } else {
+        nameInput.classList.remove('error');
+      }
+
+      // Email validation
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailInput.value.trim() === '' || !emailPattern.test(emailInput.value.trim())) {
+        emailError.textContent = 'Valid email is required.';
+        emailInput.classList.add('error');
+        isValid = false;
+      } else {
+        emailInput.classList.remove('error');
+      }
+
+      // Message validation
+      if (messageInput.value.trim() === '') {
+        messageError.textContent = 'Message cannot be empty.';
+        messageInput.classList.add('error');
+        isValid = false;
+      } else {
+        messageInput.classList.remove('error');
+      }
+
+      return isValid;
     }
 
-    form.addEventListener('submit', e => {
-      let valid = true;
-      // Reset errors
-      [nameError, emailError, messageError].forEach(el => (el.textContent = ''));
-      [nameInput, emailInput, messageInput].forEach(input => input.classList.remove('error'));
-
-      if (!nameInput.value.trim()) {
-        nameError.textContent = 'Please enter your name.';
-        nameInput.classList.add('error');
-        valid = false;
-      }
-      if (!emailInput.value.trim() || !validateEmail(emailInput.value.trim())) {
-        emailError.textContent = 'Please enter a valid email address.';
-        emailInput.classList.add('error');
-        valid = false;
-      }
-      if (!messageInput.value.trim()) {
-        messageError.textContent = 'Please enter your message.';
-        messageInput.classList.add('error');
-        valid = false;
-      }
-
-      if (!valid) {
-        e.preventDefault();
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (validateForm()) {
+        form.submit();
       }
     });
 
+    // Carousel functionality
+    let currentSlideIndex = 0;
+    const slides = document.querySelector('.slides');
+    const dots = document.querySelectorAll('.dot');
+
+    function showSlide(index) {
+      currentSlideIndex = index;
+      slides.style.transform = `translateX(-${index * (100 / 3)}%)`; // Adjust based on number of slides
+      dots.forEach(dot => dot.classList.remove('active'));
+      dots[index].classList.add('active');
+    }
+
+    function currentSlide(index) {
+      showSlide(index);
+    }
+
+    // Auto slide function (optional)
+    setInterval(() => {
+      currentSlideIndex = (currentSlideIndex + 1) % 3; // Adjust based on number of slides
+      showSlide(currentSlideIndex);
+    }, 5000); // Change slide every 5 seconds
   </script>
 </body>
 </html>
-
-
-
-<script>
-  let slideIndex = 0;
-  const slides = document.querySelector('.slides');
-  const dots = document.querySelectorAll('.dot');
-
-  function showSlide(index) {
-    slides.style.transform = `translateX(-${index * 100}%)`;
-    dots.forEach(dot => dot.classList.remove('active'));
-    dots[index].classList.add('active');
-    slideIndex = index;
-  }
-
-  function currentSlide(index) {
-    showSlide(index);
-    clearInterval(autoScroll); // pause auto scroll on manual click
-    autoScroll = setInterval(nextSlide, 4000);
-  }
-
-  function nextSlide() {
-    slideIndex = (slideIndex + 1) % dots.length;
-    showSlide(slideIndex);
-  }
-
-  let autoScroll = setInterval(nextSlide, 4000);
-  showSlide(slideIndex);
-</script>
-
-
-.carousel {
-  position: relative;
-  max-width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.slides {
-  display: flex;
-  width: 300%;
-  height: 100%;
-  transition: transform 1s ease-in-out;
-}
-
-.slides img {
-  width: 100%;
-  height: 100vh;
-  object-fit: cover;
-}
-
-.dots {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 12px;
-}
-
-.dot {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.dot.active {
-  background: white;
-}
-
-<section id="home" class="active" tabindex="-1" aria-label="Welcome section">
-  <div class="carousel">
-    <div class="slides">
-      <img src="images/slide1.jpg" alt="Slide 1">
-      <img src="images/slide2.jpg" alt="Slide 2">
-      <img src="images/slide3.jpg" alt="Slide 3">
-    </div>
-    <div class="dots">
-      <span class="dot" onclick="currentSlide(0)"></span>
-      <span class="dot" onclick="currentSlide(1)"></span>
-      <span class="dot" onclick="currentSlide(2)"></span>
-    </div>
-  </div>
-</section>
